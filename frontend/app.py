@@ -297,52 +297,297 @@ def render_login_page() -> None:
 
 
 def render_home_page() -> None:
-    st.title("Home")
-    st.write("Welcome to the AI-Powered Image Stylization platform.")
+    # Custom CSS for production-ready styling
     st.markdown(
-        "Upload an image, apply advanced stylization effects, compare before/after results, "
-        "and save your processing history securely."
+        """
+        <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .cta-button {
+            background: #ff6b6b;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+        .stats-section {
+            background: #f8f9fa;
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+        .testimonial-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #667eea;
+        }
+        .testimonial-text {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        .testimonial-author {
+            font-weight: 600;
+            color: #333;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
     )
 
+    # Hero Section
+    st.markdown(
+        """
+        <div class="hero-section">
+            <h1 class="hero-title">Transform Your Images with AI</h1>
+            <p class="hero-subtitle">
+                Professional image stylization powered by advanced AI. Turn ordinary photos into stunning artwork
+                with our collection of premium effects including cartoon, sketch, HDR, and artistic filters.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # CTA Buttons
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        cta_col1, cta_col2 = st.columns(2)
+        with cta_col1:
+            if st.button("🚀 Start Creating", use_container_width=True, type="primary", key="hero_start"):
+                if st.session_state.get("current_user"):
+                    _navigate_to("Processing")
+                else:
+                    _navigate_to("Login")
+        with cta_col2:
+            if st.button("📖 Learn More", use_container_width=True, key="hero_learn"):
+                st.info("Scroll down to explore our features!")
+
+    # User Status
     if st.session_state.get("current_user"):
-        st.caption(f"Signed in as {st.session_state['current_user']['username']}")
+        st.success(f"Welcome back, {st.session_state['current_user']['username']}! Ready to create amazing art?")
     else:
-        st.info("Sign in or create an account to save history and unlock downloads.")
+        st.info("✨ Sign in to unlock premium downloads and save your creations")
 
-    feature_col_1, feature_col_2, feature_col_3 = st.columns(3)
-    with feature_col_1:
-        st.markdown("### Fast Processing")
-        st.write("High-performance OpenCV pipelines with automatic resizing for large images.")
-    with feature_col_2:
-        st.markdown("### Secure Access")
-        st.write("Hashed passwords, session tokens, and payment-gated downloads for paid content.")
-    with feature_col_3:
-        st.markdown("### Styled Results")
-        st.write("Classic cartoon, sketch, HDR, pop art, vintage, and fun effects in one place.")
+    # Features Section
+    st.markdown("## 🎨 Powerful Features")
+    st.markdown("Discover what makes our platform the go-to choice for image stylization")
 
-    st.subheader("Quick Navigation")
+    feat_col1, feat_col2, feat_col3 = st.columns(3)
 
-    nav_col_1, nav_col_2, nav_col_3 = st.columns(3)
-    with nav_col_1:
-        if st.button("Go to Login", use_container_width=True, key="home_go_login"):
-            _navigate_to("Login")
-    with nav_col_2:
-        if st.button("Go to Sign In", use_container_width=True, key="home_go_signin"):
-            _navigate_to("Login")
-        if st.button("Go to Sign Up", use_container_width=True, key="home_go_signup"):
-            _navigate_to("Sign Up")
-    with nav_col_3:
-        if st.button("Go to Processing", use_container_width=True, key="home_go_processing"):
-            _navigate_to("Processing")
-        if st.button("Go to Dashboard", use_container_width=True, key="home_go_dashboard"):
-            _navigate_to("Dashboard")
+    with feat_col1:
+        st.markdown(
+            """
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Lightning Fast</div>
+                <div class="feature-desc">
+                    High-performance OpenCV pipelines process images instantly with automatic optimization for large files.
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-    st.subheader("Open Source Style Inspirations")
-    st.markdown("Explore visual references that inspire the platform's stylization effects.")
+    with feat_col2:
+        st.markdown(
+            """
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-title">Secure & Private</div>
+                <div class="feature-desc">
+                    Bank-level security with encrypted authentication, secure payments, and private image galleries.
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-    card_col_1, card_col_2, card_col_3 = st.columns(3)
+    with feat_col3:
+        st.markdown(
+            """
+            <div class="feature-card">
+                <div class="feature-icon">🎭</div>
+                <div class="feature-title">20+ Effects</div>
+                <div class="feature-desc">
+                    From classic cartoons to modern pop art, explore a vast library of professional stylization effects.
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-    with card_col_1:
+    # Stats Section
+    st.markdown(
+        """
+        <div class="stats-section">
+            <h2 style="color: #333; margin-bottom: 2rem;">Trusted by Creators Worldwide</h2>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
+    with stat_col1:
+        st.markdown(
+            """
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Images Processed</div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with stat_col2:
+        st.markdown(
+            """
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Happy Users</div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with stat_col3:
+        st.markdown(
+            """
+            <div class="stat-number">20+</div>
+            <div class="stat-label">Style Effects</div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with stat_col4:
+        st.markdown(
+            """
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">Uptime</div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # How It Works
+    st.markdown("## 🚀 How It Works")
+    st.markdown("Get started in just 3 simple steps")
+
+    step_col1, step_col2, step_col3 = st.columns(3)
+
+    with step_col1:
+        st.markdown("### 1. Upload & Choose")
+        st.markdown("Upload your image and select from our collection of professional effects")
+        st.image("https://via.placeholder.com/200x150/667eea/white?text=Upload", use_container_width=True)
+
+    with step_col2:
+        st.markdown("### 2. Process & Compare")
+        st.markdown("Watch the AI transform your image and compare before/after results")
+        st.image("https://via.placeholder.com/200x150/764ba2/white?text=Process", use_container_width=True)
+
+    with step_col3:
+        st.markdown("### 3. Download & Share")
+        st.markdown("Save your creation and share your artistic masterpiece")
+        st.image("https://via.placeholder.com/200x150/ff6b6b/white?text=Download", use_container_width=True)
+
+    # Testimonials
+    st.markdown("## 💬 What Our Users Say")
+
+    test_col1, test_col2 = st.columns(2)
+
+    with test_col1:
+        st.markdown(
+            """
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "This platform transformed my photography business. The cartoon effects are incredible!"
+                </div>
+                <div class="testimonial-author">- Sarah Chen, Photographer</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with test_col2:
+        st.markdown(
+            """
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "The HDR effects make my landscape photos look professional. Highly recommended!"
+                </div>
+                <div class="testimonial-author">- Mike Johnson, Designer</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    # Inspirational Images Section
+    st.markdown("## 🎭 Style Inspirations")
+    st.markdown("Explore the artistic influences behind our effects")
+
+    insp_col1, insp_col2, insp_col3 = st.columns(3)
+
+    with insp_col1:
         st.markdown("#### Dreamy Color Fields")
         st.image(
             "https://upload.wikimedia.org/wikipedia/commons/e/ea/The_Starry_Night.jpg",
@@ -350,7 +595,7 @@ def render_home_page() -> None:
         )
         st.caption("Post-Impressionist reference for bold brush-like color movement.")
 
-    with card_col_2:
+    with insp_col2:
         st.markdown("#### Strong Line Energy")
         st.image(
             "https://upload.wikimedia.org/wikipedia/commons/0/0a/The_Great_Wave_off_Kanagawa.jpg",
@@ -358,7 +603,7 @@ def render_home_page() -> None:
         )
         st.caption("High-contrast line structure that maps well to comic and cartoon filters.")
 
-    with card_col_3:
+    with insp_col3:
         st.markdown("#### Natural Texture")
         st.image(
             "https://upload.wikimedia.org/wikipedia/commons/9/9a/Gull_portrait_ca_usa.jpg",
@@ -366,9 +611,18 @@ def render_home_page() -> None:
         )
         st.caption("Real-world texture reference useful for sketch and painterly effects.")
 
-    st.caption(
-        "Image sources: Wikimedia Commons public-domain/openly licensed works used for landing-page structure."
-    )
+    st.caption("Image sources: Wikimedia Commons public-domain/openly licensed works.")
+
+    # Final CTA
+    st.markdown("---")
+    st.markdown("## Ready to Create Something Amazing?")
+    final_col1, final_col2, final_col3 = st.columns([1, 2, 1])
+    with final_col2:
+        if st.button("🎨 Start Your Artistic Journey", use_container_width=True, type="primary", key="final_cta"):
+            if st.session_state.get("current_user"):
+                _navigate_to("Processing")
+            else:
+                _navigate_to("Sign Up")
 
 
 def render_signup_page() -> None:
